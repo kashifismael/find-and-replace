@@ -14,7 +14,7 @@ func main() {
 	textToReplaceWith := cliArgs[1]
 	pathToFile := cliArgs[2]
 
-	cmd := exec.Command("rg", textToSearchFor, "-H", pathToFile, "--line-number", "--no-filename")
+	cmd := exec.Command("rg", textToSearchFor, pathToFile, "--no-heading", "--with-filename", "--line-number")
 
 	out, err := cmd.Output()
 
@@ -22,9 +22,20 @@ func main() {
 		log.Fatal("No results")
 	}
 
-	results := strings.Split(string(out), "\n")
+	rawResults := strings.Split(string(out), "\n")
 
-	for _, line := range results {
-		Replace(pathToFile, line, textToSearchFor, textToReplaceWith)
+	var results []LineContext = make([]LineContext, 0)
+
+	for _, line := range rawResults {
+
+		if strings.TrimSpace(line) != "" {
+			context := BuildLineContext(line, textToSearchFor, textToReplaceWith, len(results) + 1)
+			results = append(results, context)
+		}
+
+	}
+
+	for _, context := range results {
+		Replace(context, len(results))
 	}
 }
