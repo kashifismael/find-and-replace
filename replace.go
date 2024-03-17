@@ -38,14 +38,21 @@ func requestUserInput(lineCtx LineContext, totalNumberOfLines int) string {
 	resultIndex := lineCtx.resultIndex
 
 	fmt.Println("")
-	fmt.Printf("%v:%v \n", fileName, lineNumber)
+
+	fileInfo := fmt.Sprintf("%v:%v \n", fileName, lineNumber)
+	fmt.Println(Format(YELLOW, fileInfo))
+
 	fmt.Println(text)
-	message := fmt.Sprintf("(%v/%v) Do you want to replace '%v' with '%v'? (y/n)", 
-		resultIndex,
-		totalNumberOfLines,
-		textToReplace,
-		textToAdd,
-	)
+
+	fmt.Println("")
+	message := Format(
+		PURPLE,
+		fmt.Sprintf("(%v/%v) Do you want to replace '%v' with '%v'? (y/n)",
+			resultIndex,
+			totalNumberOfLines,
+			textToReplace,
+			textToAdd,
+		))
 	fmt.Println(message)
 
 	var input string

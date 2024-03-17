@@ -5,12 +5,12 @@ import (
 )
 
 type LineContext struct {
-	fileName string
-	lineNumber string
-	lineContent string
+	fileName     string
+	lineNumber   string
+	lineContent  string
 	wordToRemove string
-	wordToAdd string
-	resultIndex int
+	wordToAdd    string
+	resultIndex  int
 }
 
 func BuildLineContext(rawGrepLine string, wordToRemove string, wordToAdd string, resultIndex int) LineContext {
@@ -25,5 +25,3 @@ func BuildLineContext(rawGrepLine string, wordToRemove string, wordToAdd string,
 		resultIndex,
 	}
 }
-
-
