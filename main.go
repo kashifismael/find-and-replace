@@ -29,7 +29,7 @@ func main() {
 	for _, line := range rawResults {
 
 		if strings.TrimSpace(line) != "" {
-			context := BuildLineContext(line, textToSearchFor, textToReplaceWith, len(results) + 1)
+			context := BuildLineContext(line, textToSearchFor, textToReplaceWith, len(results)+1)
 			results = append(results, context)
 		}
 
