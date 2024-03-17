@@ -3,34 +3,18 @@ package main
 import (
 	"fmt"
 	"os/exec"
-	"strings"
 )
 
-func Replace(fileName string, lineOfText string, textToReplace string, textToAdd string) {
+func Replace(lineCtx LineContext, totalNumberOfLines int) {
 
-	lineOfTextArgs := strings.Split(lineOfText, ":")
+	textToReplace := lineCtx.wordToRemove
+	textToAdd := lineCtx.wordToAdd
+	fileName := lineCtx.fileName
+	lineNumber := lineCtx.lineNumber
 
-	if len(lineOfTextArgs) == 1 {
-		return
-	}
+	userIntent := requestUserInput(lineCtx, totalNumberOfLines)
 
-	lineNumber := lineOfTextArgs[0]
-	text := lineOfTextArgs[1]
-
-	fmt.Println("")
-	fmt.Println(text)
-	message := fmt.Sprintf("(k)eep '%v', or (r)eplace with '%v'", textToReplace, textToAdd)
-	fmt.Println(message)
-
-	var input string
-	fmt.Scan(&input)
-
-	if input != "k" && input != "r" {
-		panic("received unrecognised value")
-	}
-
-	if input == "k" {
-		fmt.Println("skipping...")
+	if userIntent == "KEEP" {
 		return
 	}
 
@@ -43,4 +27,37 @@ func Replace(fileName string, lineOfText string, textToReplace string, textToAdd
 		fmt.Println(err.Error())
 	}
 
+}
+
+func requestUserInput(lineCtx LineContext, totalNumberOfLines int) string {
+	text := lineCtx.lineContent
+	textToReplace := lineCtx.wordToRemove
+	textToAdd := lineCtx.wordToAdd
+	fileName := lineCtx.fileName
+	lineNumber := lineCtx.lineNumber
+	resultIndex := lineCtx.resultIndex
+
+	fmt.Println("")
+	fmt.Printf("%v:%v \n", fileName, lineNumber)
+	fmt.Println(text)
+	message := fmt.Sprintf("(%v/%v) Do you want to replace '%v' with '%v'? (y/n)", 
+		resultIndex,
+		totalNumberOfLines,
+		textToReplace,
+		textToAdd,
+	)
+	fmt.Println(message)
+
+	var input string
+	fmt.Scan(&input)
+
+	if input != "y" && input != "n" {
+		panic("received unrecognised value")
+	}
+
+	if input == "n" {
+		return "KEEP"
+	}
+
+	return "REPLACE"
 }
